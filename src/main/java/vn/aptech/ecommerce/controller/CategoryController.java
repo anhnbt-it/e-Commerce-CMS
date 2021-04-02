@@ -1,5 +1,6 @@
 package vn.aptech.ecommerce.controller;
 
+import vn.aptech.ecommerce.utilities.UserInputMethod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.aptech.ecommerce.entities.Category;

@@ -5,6 +5,7 @@
  */
 package vn.aptech.ecommerce.controller;
 
+import vn.aptech.ecommerce.utilities.UserInputMethod;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Hashtable;

@@ -1,5 +1,7 @@
 package vn.aptech.ecommerce.controller;
 
+import vn.aptech.ecommerce.service.ImageService;
+import vn.aptech.ecommerce.utilities.UserInputMethod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.aptech.ecommerce.entities.Category;
@@ -20,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import vn.aptech.ecommerce.service.ImageServiceImpl;
 
 
 public class ProductController extends BaseController {
@@ -30,11 +33,13 @@ public class ProductController extends BaseController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final UserInputMethod userInputMethod;
-
+    private final ImageService imageService;
+            
     public ProductController() {
         this.productService = new ProductServiceImpl();
         this.categoryService = new CategoryServiceImpl();
         this.userInputMethod = new UserInputMethod();
+        this.imageService = new ImageServiceImpl();
     }
 
     private void showCategories() throws SQLException {
@@ -52,8 +57,8 @@ public class ProductController extends BaseController {
     public void create() {
         displayTitle("Them san pham moi");
         showMessage("Cac truong danh dau * la bat buoc phai nhap.");
-//        this.stepOne();
-        this.stepTwo();
+        Product product = this.stepOne();
+        this.stepTwo(product);
     }
 
     @Override
@@ -100,8 +105,9 @@ public class ProductController extends BaseController {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void stepOne() {
+    private Product stepOne() {
         String choice;
+        Product product = null;
         try {
             do {
                 displayTitle("Buoc 1: Thong tin co ban");
@@ -139,7 +145,7 @@ public class ProductController extends BaseController {
                 }
                 Integer supplierId = userInputMethod.inputInteger("Nhap ID nha cung cap muon chon (*): ");
                 userInputMethod.nextLine();
-                Product product = new Product();
+                product = new Product();
                 product.setCategoryId(categoryId);
                 product.setBrandId(brandId);
                 product.setSupplierId(supplierId);
@@ -161,26 +167,39 @@ public class ProductController extends BaseController {
         } catch (SQLException e) {
             LOGGER.error("Exception when add product step 1: ", e);
         }
+        return product;
     }
 
-    private void stepTwo() {
-        displayTitle("Buoc 2: Nhap anh cho san pham");
+    private void stepTwo(Product product) {
+        String choice;
         do {
+            displayTitle("Buoc 2: Nhap anh cho san pham");
             String targetFile = userInputMethod.inputString("Nhap duong dan den tap tin anh trong may: ");
-            copyFile(targetFile, "D:\\uploads");
-        } while (true);
+            Path target = copyFile(targetFile, "D:\\uploads");
+            if (target.isAbsolute()) {
+                imageService.save(target.getFileName().toString(), product.getId());
+            }
+            choice = userInputMethod.inputString("Ban co muon them anh khac khong? (y/N): ");
+        } while ("y".equalsIgnoreCase(choice));
     }
     
-    public static void copyFile(String filePath, String dir) {
+    private void stepThree() {
+        displayTitle("Buoc 3: Chon danh muc san pham");
+    }
+    
+    private Path copyFile(String filePath, String dir) {
         Path sourceFile = Paths.get(filePath);
         Path targetDir = Paths.get(dir);
         Path targetFile = targetDir.resolve(sourceFile.getFileName());
         try {
-            Files.copy(sourceFile, targetFile);
-        } catch (FileAlreadyExistsException ex) {
-            System.err.format("File %s already exists.", targetFile);
-        } catch (IOException ex) {
-            System.err.format("I/O Error when copying file");
+            Path target = Files.copy(sourceFile, targetFile);
+        } catch (FileAlreadyExistsException e) {
+            System.err.format("File '%s' da ton tai.\n", targetFile);
+        } catch (IOException e) {
+            System.err.format("Loi khi sao chep tep '%s'.\n", targetFile);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
+        return targetFile;
     }
 }

@@ -1,4 +1,4 @@
-package vn.aptech.ecommerce.controller;
+package vn.aptech.ecommerce.utilities;
 
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
@@ -72,7 +72,7 @@ public class UserInputMethod {
         return number;
     }
 
-    Double inputPrice(String title) {
+    public Double inputPrice(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -89,7 +89,7 @@ public class UserInputMethod {
         }
     }
 
-    String inputName(String title) {
+    public String inputName(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -110,7 +110,7 @@ public class UserInputMethod {
         }
     }
 
-    String inputDesc(String title) {
+    public String inputDesc(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
