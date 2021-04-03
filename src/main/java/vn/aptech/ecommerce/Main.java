@@ -5,6 +5,7 @@
  */
 package vn.aptech.ecommerce;
 
+import java.io.Console;
 import vn.aptech.ecommerce.controller.CategoryController;
 import vn.aptech.ecommerce.controller.ProductController;
 import vn.aptech.ecommerce.controller.ShoppingCartController;
@@ -42,6 +43,7 @@ public class Main {
                 System.out.println("\t5. Dang xuat");
                 System.out.println("\t6. Thoat");
                 System.out.println("\t7. Mua hang");
+                System.out.println("\t8. Dang nhap");
                 System.out.print("Nhap lua chon [1-7]: ");
 
                 final int input = Integer.parseInt(scanner.nextLine());
@@ -67,6 +69,10 @@ public class Main {
                         System.exit(0);
                     case 7:
                         showShoppingCartOption(scanner);
+                        break;
+                    case 8:
+                        scanner.nextLine();
+                        showLogin(scanner);
                         break;
                     default:
                         System.out.println("Lua chon khong ton tai\n\n");
@@ -178,6 +184,18 @@ public class Main {
                     System.out.println("Lua chon khong ton tai.\n\n");
             }
         } while (true);
+    }
+
+    private static void showLogin(Scanner scanner) {
+        System.out.println("Ten dang nhap: ");
+        String username = scanner.nextLine();
+        System.out.println("Mat khau: ");
+        String password = scanner.nextLine();
+        if (username.equals("admin") && password.equals("123456")) {
+            System.out.println("??ng nh?p thành công! Chào m?ng " + username);
+        } else {
+            System.out.println("??ng nh?p th?t b?i. Tên ??ng nh?p ho?c m?t kh?u không chính xác!");
+        }
     }
 
 }
