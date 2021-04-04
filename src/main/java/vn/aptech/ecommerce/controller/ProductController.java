@@ -1,7 +1,7 @@
 package vn.aptech.ecommerce.controller;
 
 import vn.aptech.ecommerce.service.ImageService;
-import vn.aptech.ecommerce.utilities.UserInputMethod;
+import vn.aptech.ecommerce.utilities.InputUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.aptech.ecommerce.entities.Category;
@@ -22,23 +22,22 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import vn.aptech.ecommerce.constant.Constant;
 import vn.aptech.ecommerce.service.ImageServiceImpl;
 
-
 public class ProductController extends BaseController {
+
     private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
 
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //hh:mm:ss
+    DateFormat dateFormat = new SimpleDateFormat(Constant.DATE.FORMAT.DATE);
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final UserInputMethod userInputMethod;
     private final ImageService imageService;
-            
+
     public ProductController() {
         this.productService = new ProductServiceImpl();
         this.categoryService = new CategoryServiceImpl();
-        this.userInputMethod = new UserInputMethod();
         this.imageService = new ImageServiceImpl();
     }
 
@@ -71,9 +70,6 @@ public class ProductController extends BaseController {
             } else {
                 System.out.println("ID\tTEN\tGIA\t\tGIA GOC\t\tDISCOUNT");
                 DecimalFormat formatter = new DecimalFormat("###,###,###");
-//                Locale loc = Locale.getDefault();
-//                NumberFormat nf = NumberFormat.getCurrencyInstance(loc);
-//                nf.format(1000000)); // Output: $1,000,000.00
                 for (Product product : products) {
                     Optional<Category> category = categoryService.findById(product.getCategoryId());
                     System.out.printf("%d\t" // Id
@@ -88,7 +84,7 @@ public class ProductController extends BaseController {
                             formatter.format(product.getNewPrice()) + " VND");
                 }
                 showMessage("Nhan <enter> de thoat.");
-                userInputMethod.nextLine();
+                InputUtils.nextLine();
             }
         } catch (SQLException e) {
             LOGGER.error("Exception when show product: ", e);
@@ -111,40 +107,40 @@ public class ProductController extends BaseController {
         try {
             do {
                 displayTitle("Buoc 1: Thong tin co ban");
-                String name = userInputMethod.inputName("Nhap ten san pham [Toi da 45 ky tu] (*): ");
-                Double price = userInputMethod.inputPrice("Nhap gia cua san pham [VND] (*): ");
+                String name = InputUtils.inputName("Nhap ten san pham [Toi da 45 ky tu] (*): ");
+                Double price = InputUtils.inputPrice("Nhap gia cua san pham [VND] (*): ");
                 Integer discount = 0;
                 if (price > 0) {
-                    discount = userInputMethod.inputDiscount("Nhap % giam gia [0-100]: ");
+                    discount = InputUtils.inputDiscount("Nhap % giam gia [0-100]: ");
                 }
-                Integer quantity = userInputMethod.inputQuantity("Nhap so luong cua san pham (*): ");
-                userInputMethod.nextLine();
-                String thumbnailUrl = userInputMethod.inputString("Nhap duong dan anh cua san pham (*): ");
-                String description = userInputMethod.inputDesc("Nhap mo ta cua san pham [Toi da 5000 ky tu]: ");
+                Integer quantity = InputUtils.inputQuantity("Nhap so luong cua san pham (*): ");
+                InputUtils.nextLine();
+                String thumbnailUrl = InputUtils.inputString("Nhap duong dan anh cua san pham (*): ");
+                String description = InputUtils.inputDesc("Nhap mo ta cua san pham [Toi da 5000 ky tu]: ");
 
                 System.out.println("Chon danh muc cho san pham");
-                choice = userInputMethod.inputString("Ban co muon xem danh sach danh muc khong? [y/N]: ");
+                choice = InputUtils.inputString("Ban co muon xem danh sach danh muc khong? [y/N]: ");
                 if ("y".equalsIgnoreCase(choice)) {
                     showCategories();
                 }
-                Integer categoryId = userInputMethod.inputInteger("Nhap ID danh muc muon chon (*): ");
+                Integer categoryId = InputUtils.inputInteger("Nhap ID danh muc muon chon (*): ");
 
                 System.out.println("Chon thuong hieu cho san pham");
-                userInputMethod.nextLine();
-                choice = userInputMethod.inputString("Ban co muon xem danh sach thuong hieu khong? [y/N]: ");
+                InputUtils.nextLine();
+                choice = InputUtils.inputString("Ban co muon xem danh sach thuong hieu khong? [y/N]: ");
                 if ("y".equalsIgnoreCase(choice)) {
                     showCategories();
                 }
-                Integer brandId = userInputMethod.inputInteger("Nhap ID thuong hieu muon chon (*): ");
+                Integer brandId = InputUtils.inputInteger("Nhap ID thuong hieu muon chon (*): ");
 
                 System.out.println("Chon nha cung cap cho san pham");
-                userInputMethod.nextLine();
-                choice = userInputMethod.inputString("Ban co muon xem danh sach nha cung cap khong? [y/N]: ");
+                InputUtils.nextLine();
+                choice = InputUtils.inputString("Ban co muon xem danh sach nha cung cap khong? [y/N]: ");
                 if ("y".equalsIgnoreCase(choice)) {
                     showCategories();
                 }
-                Integer supplierId = userInputMethod.inputInteger("Nhap ID nha cung cap muon chon (*): ");
-                userInputMethod.nextLine();
+                Integer supplierId = InputUtils.inputInteger("Nhap ID nha cung cap muon chon (*): ");
+                InputUtils.nextLine();
                 product = new Product();
                 product.setCategoryId(categoryId);
                 product.setBrandId(brandId);
@@ -162,7 +158,7 @@ public class ProductController extends BaseController {
                     showMessage("Them san pham moi that bai!");
                 }
 
-                choice = userInputMethod.inputString("Ban muon them san pham khac khong? (y/N): ");
+                choice = InputUtils.inputString("Ban muon them san pham khac khong? (y/N): ");
             } while ("y".equalsIgnoreCase(choice));
         } catch (SQLException e) {
             LOGGER.error("Exception when add product step 1: ", e);
@@ -174,19 +170,19 @@ public class ProductController extends BaseController {
         String choice;
         do {
             displayTitle("Buoc 2: Nhap anh cho san pham");
-            String targetFile = userInputMethod.inputString("Nhap duong dan den tap tin anh trong may: ");
+            String targetFile = InputUtils.inputString("Nhap duong dan den tap tin anh trong may: ");
             Path target = copyFile(targetFile, "D:\\uploads");
             if (target.isAbsolute()) {
                 imageService.save(target.getFileName().toString(), product.getId());
             }
-            choice = userInputMethod.inputString("Ban co muon them anh khac khong? (y/N): ");
+            choice = InputUtils.inputString("Ban co muon them anh khac khong? (y/N): ");
         } while ("y".equalsIgnoreCase(choice));
     }
-    
+
     private void stepThree() {
         displayTitle("Buoc 3: Chon danh muc san pham");
     }
-    
+
     private Path copyFile(String filePath, String dir) {
         Path sourceFile = Paths.get(filePath);
         Path targetDir = Paths.get(dir);

@@ -4,17 +4,17 @@ import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class UserInputMethod {
+public class InputUtils {
 
     public static final Scanner scanner = new Scanner(System.in);
 
-    public String inputString(String title) {
+    public static String inputString(String title) {
         System.out.print("\t" + title);
         String str = scanner.nextLine();
         return str;
     }
 
-    public Integer inputInteger(String title) {
+    public static Integer inputInteger(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -26,7 +26,7 @@ public class UserInputMethod {
         }
     }
 
-    public Integer inputQuantity(String title) {
+    public static Integer inputQuantity(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -43,7 +43,7 @@ public class UserInputMethod {
         }
     }
 
-    public Integer inputDiscount(String title) {
+    public static Integer inputDiscount(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -60,19 +60,19 @@ public class UserInputMethod {
         }
     }
 
-    public Double inputDouble(String title) {
+    public static Double inputDouble(String title) {
         System.out.print("\t" + title);
         Double number = scanner.nextDouble();
         return number;
     }
 
-    public BigDecimal inputBigDecimal(String title) {
+    public static BigDecimal inputBigDecimal(String title) {
         System.out.print(title);
         BigDecimal number = scanner.nextBigDecimal();
         return number;
     }
 
-    public Double inputPrice(String title) {
+    public static Double inputPrice(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -89,7 +89,7 @@ public class UserInputMethod {
         }
     }
 
-    public String inputName(String title) {
+    public static String inputName(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -110,7 +110,7 @@ public class UserInputMethod {
         }
     }
 
-    public String inputDesc(String title) {
+    public static String inputDesc(String title) {
         while (true) {
             System.out.print("\t" + title);
             try {
@@ -126,7 +126,7 @@ public class UserInputMethod {
         }
     }
 
-    public void nextLine() {
+    public static void nextLine() {
         scanner.nextLine();
     }
 }

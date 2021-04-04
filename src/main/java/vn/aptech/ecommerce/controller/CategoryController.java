@@ -1,6 +1,6 @@
 package vn.aptech.ecommerce.controller;
 
-import vn.aptech.ecommerce.utilities.UserInputMethod;
+import vn.aptech.ecommerce.utilities.InputUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.aptech.ecommerce.entities.Category;
@@ -22,11 +22,8 @@ public class CategoryController extends BaseController {
 
     private final CategoryService categoryService;
 
-    private final UserInputMethod userInputMethod;
-
     public CategoryController() {
         this.categoryService = new CategoryServiceImpl();
-        this.userInputMethod = new UserInputMethod();
     }
 
     @Override
@@ -34,7 +31,7 @@ public class CategoryController extends BaseController {
         displayTitle("Them danh muc moi");
         try {
             while (true) {
-                String name = userInputMethod.inputString("Nhap ten danh muc: ");
+                String name = InputUtils.inputString("Nhap ten danh muc: ");
                 Category category = new Category(name);
                 if (categoryService.saveOrUpdate(category) != -1) {
                     showMessage("Them danh muc moi thanh cong!");
@@ -42,7 +39,7 @@ public class CategoryController extends BaseController {
                     showMessage("Them danh muc moi that bai!");
                 }
                 
-                String choice = userInputMethod.inputString("Ban muon them danh muc khac khong? (y/N): ");
+                String choice = InputUtils.inputString("Ban muon them danh muc khac khong? (y/N): ");
 
                 if (!"y".equalsIgnoreCase(choice)) {
                     break;
@@ -67,7 +64,7 @@ public class CategoryController extends BaseController {
                     System.out.printf("%d\t\t%s\t\t%s%n", category.getId(), category.getName(), dateFormat.format(category.getCreatedAt()));
                 }
                 showMessage("Nhan <enter> de thoat.");
-                userInputMethod.nextLine();
+                InputUtils.nextLine();
             }
         } catch (SQLException ex) {
             logger.error(ex.getMessage());
@@ -80,13 +77,13 @@ public class CategoryController extends BaseController {
         displayTitle("Chinh sua danh muc");
         try {
             while (true) {
-                Integer id = userInputMethod.inputInteger("Nhap vao ID cua danh muc muon chinh sua: ");
-                userInputMethod.nextLine();
+                Integer id = InputUtils.inputInteger("Nhap vao ID cua danh muc muon chinh sua: ");
+                InputUtils.nextLine();
 
                 Optional<Category> category = categoryService.findById(id);
                 if (category.isPresent() && category.get().getId() != null) {
                     System.out.println("Ban dang sua danh muc: " + category.get().getName());
-                    String name = userInputMethod.inputString("Nhap ten danh muc: ");
+                    String name = InputUtils.inputString("Nhap ten danh muc: ");
                     category.get().setName(name);
                     category.get().setUpdatedAt(new Timestamp(System.currentTimeMillis()));
                     if (categoryService.saveOrUpdate(category.get()) != -1) {
@@ -98,7 +95,7 @@ public class CategoryController extends BaseController {
                     showMessage("Khong tim thay danh muc co ID = " + id);
                 }
                 
-                String choice = userInputMethod.inputString("Ban muon chinh sua danh muc khac khong? (y/N): ");
+                String choice = InputUtils.inputString("Ban muon chinh sua danh muc khac khong? (y/N): ");
 
                 if (!"y".equalsIgnoreCase(choice)) {
                     break;
@@ -115,11 +112,11 @@ public class CategoryController extends BaseController {
         displayTitle("Xoa danh muc");
         try {
             while (true) {
-                Integer id = userInputMethod.inputInteger("Nhap vao ID cua danh muc muon xoa: ");
-                userInputMethod.nextLine();
+                Integer id = InputUtils.inputInteger("Nhap vao ID cua danh muc muon xoa: ");
+                InputUtils.nextLine();
                 Optional<Category> category = categoryService.findById(id);
                 if (category.isPresent() && category.get().getId() != null) {
-                    String choice = userInputMethod.inputString("Ban co muon xoa danh muc nay '" + category.get().getName() + "?' (y/N): ");
+                    String choice = InputUtils.inputString("Ban co muon xoa danh muc nay '" + category.get().getName() + "?' (y/N): ");
                     if ("y".equalsIgnoreCase(choice)) {
                         if (categoryService.deleteById(id)) {
                             showMessage("Xoa danh muc thanh cong!");
@@ -130,7 +127,7 @@ public class CategoryController extends BaseController {
                 } else {
                     showMessage("Khong tim thay danh muc co ID = " + id);
                 }
-                String choice = userInputMethod.inputString("Ban co muon xoa danh muc khac khong? (y/N): ");
+                String choice = InputUtils.inputString("Ban co muon xoa danh muc khac khong? (y/N): ");
 
                 if (!"y".equalsIgnoreCase(choice)) {
                     break;

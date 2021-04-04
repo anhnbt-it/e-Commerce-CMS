@@ -5,7 +5,7 @@
  */
 package vn.aptech.ecommerce.controller;
 
-import vn.aptech.ecommerce.utilities.UserInputMethod;
+import vn.aptech.ecommerce.utilities.InputUtils;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -30,14 +30,12 @@ public class ShoppingCartController extends BaseController {
 
     private final CategoryService categoryService;
     private final ProductService productService;
-    private final UserInputMethod userInputMethod;
     private final ShoppingCartService shoppingCartService;
 
     public ShoppingCartController() {
         this.categoryService = new CategoryServiceImpl();
         this.productService = new ProductServiceImpl();
         this.shoppingCartService = new ShoppingCartServiceImpl();
-        this.userInputMethod = new UserInputMethod();
     }
 
     @Override
@@ -59,7 +57,7 @@ public class ShoppingCartController extends BaseController {
                 for (Category category : categories) {
                     System.out.printf("%d\t\t%s%n", category.getId(), category.getName());
                 }
-                Integer categoryId = userInputMethod.inputInteger("Nhap ID danh muc de xem san pham: ");
+                Integer categoryId = InputUtils.inputInteger("Nhap ID danh muc de xem san pham: ");
                 this.showProductByCategoryId(categoryId);
             }
         } catch (SQLException ex) {
@@ -90,7 +88,7 @@ public class ShoppingCartController extends BaseController {
                     for (Product prod : products) {
                         System.out.println(prod.toString());
                     }
-                    Integer productId = userInputMethod.inputInteger("Nhap ID san pham de them vao gio hang: ");
+                    Integer productId = InputUtils.inputInteger("Nhap ID san pham de them vao gio hang: ");
                     this.addProductToCart(productId);
                 }
             } else {
