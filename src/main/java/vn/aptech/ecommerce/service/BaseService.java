@@ -25,4 +25,6 @@ public interface BaseService<T, ID> {
     
     public Optional<T> findById(ID id) throws SQLException;
     
+    boolean existById(ID id) throws SQLException;
+    
 }

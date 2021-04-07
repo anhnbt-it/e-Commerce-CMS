@@ -44,5 +44,10 @@ public class CategoryServiceImpl implements CategoryService {
     public Optional<Category> findById(Integer id) throws SQLException {
         return categoryDAO.findById(id);
     }
+
+    @Override
+    public boolean existById(Integer id) throws SQLException {
+        return categoryDAO.existsById(id);
+    }
     
 }

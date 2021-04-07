@@ -84,8 +84,23 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public boolean existsById(Integer integer) {
-        return false;
+    public boolean existsById(Integer id) {
+        Connection conn;
+        PreparedStatement pstmt;
+        int count = -1;
+        try {
+            conn = DBConnection.getConnection();
+            String sql = "SELECT count(*) FROM tbl_products WHERE id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery(sql);
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch(Exception e) {
+            LOGGER.error(e);
+        }
+        return count > 0;
     }
 
     @Override
@@ -130,12 +145,38 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public long count() {
-        return 0;
+        Connection conn;
+        Statement stmt;
+        long count = 0;
+        try {
+            conn = DBConnection.getConnection();
+            String sql = "SELECT count(*) as totalElements FROM tbl_products";
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                count = rs.getLong("totalElements");
+            }
+        } catch(SQLException e) {
+            LOGGER.error(e);
+        }
+        return count;
     }
 
     @Override
-    public boolean deleteById(Integer integer) {
-        return false;
+    public boolean deleteById(Integer id) {
+        Connection conn;
+        PreparedStatement pstmt;
+        int count = -1;
+        try {
+            String sql = "DELETE FROM tbl_products WHERE id = ?";
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            count = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error(e);
+        }
+        return count > 0;
     }
 
     @Override

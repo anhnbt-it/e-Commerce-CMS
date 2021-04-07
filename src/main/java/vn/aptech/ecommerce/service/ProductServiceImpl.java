@@ -50,5 +50,10 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAllByCategoryId(Integer categoryId) throws SQLException {
         return this.productDAO.findAllByCategoryId(categoryId);
     }
+
+    @Override
+    public boolean existById(Integer id) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

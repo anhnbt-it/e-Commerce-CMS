@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import vn.aptech.ecommerce.constant.Constant;
 import vn.aptech.ecommerce.service.ImageServiceImpl;
 
@@ -98,7 +99,21 @@ public class ProductController extends BaseController {
 
     @Override
     public void delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        displayTitle("Xoa san pham");
+        Integer productId = InputUtils.inputInteger("Nhap ID san pham muon xoa: ");
+        try {
+            if (productService.existById(productId)) {
+                if (productService.deleteById(productId)) {
+                    showMessage("Xoa san pham thanh cong!");
+                } else {
+                    showMessage("Da xay ra loi!");
+                }
+            } else {
+                showMessage("San pham khong ton tai.");
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e);
+        }
     }
 
     private Product stepOne() {
