@@ -3,10 +3,10 @@ apply plugin: 'jacoco'
 apply plugin: 'application'
 
 
-description = 'De tai He thong quan ly shop ban hang dien tu - Ha Noi Aptech'
+description = 'He thong quan ly va ban hang truc tuyen'
 group = 'vn.aptech'
 
-mainClassName = 'vn.aptech.ecommerce.Main'
+mainClassName = 'vn.aptech.estore.Main'
 
 repositories {
     mavenCentral()
