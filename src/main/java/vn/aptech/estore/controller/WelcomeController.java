@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vn.aptech.estore.entities;
+package vn.aptech.estore.controller;
 
 /**
  *
  * @author anhnb
  */
-public class Guest extends Account {
+public class WelcomeController {
     
 }

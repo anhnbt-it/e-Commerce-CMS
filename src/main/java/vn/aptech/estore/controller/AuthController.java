@@ -1,8 +1,8 @@
 package vn.aptech.estore.controller;
 
-import vn.aptech.estore.service.AuthService;
-import vn.aptech.estore.service.AuthServiceImpl;
+import vn.aptech.estore.service.AuthenticationServiceImpl;
 import vn.aptech.estore.utilities.InputUtils;
+import vn.aptech.estore.service.AuthenticationService;
 
 public class AuthController {
 
@@ -12,10 +12,10 @@ public class AuthController {
     //orderRecord
     //logout
     
-    private final AuthService authService;
+    private final AuthenticationService authService;
 
     public AuthController() {
-        this.authService = new AuthServiceImpl();
+        this.authService = new AuthenticationServiceImpl();
     }
     
     public void login() throws Exception {

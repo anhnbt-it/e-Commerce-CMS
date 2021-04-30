@@ -15,7 +15,7 @@ import vn.aptech.estore.utilities.DBConnection;
  *
  * @author anhnbt
  */
-public class AuthServiceImpl implements AuthService {
+public class AuthenticationServiceImpl implements AuthenticationService {
     
     /**
      *
@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean isAuthenticated(String username, String password) throws SQLException {
-        
+        return false;
     }
     
 }

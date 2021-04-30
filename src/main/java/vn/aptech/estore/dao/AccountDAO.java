@@ -6,18 +6,24 @@
 package vn.aptech.estore.dao;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
+import vn.aptech.estore.entities.Account;
 import vn.aptech.estore.entities.Admin;
-import vn.aptech.estore.entities.Guest;
+import vn.aptech.estore.entities.Customer;
 
 /**
  *
- * @author anhnb
+ * @author anhnbt
  */
-public interface UserDAO {
+public interface AccountDAO extends DAO<Account, Integer>{
     
-    Optional<Guest> findFirstByUsernameAndPassword(String username, String password) throws SQLException;
+    Optional<Customer> findFirstByUsernameAndPassword(String username, String password) throws SQLException;
     
     Optional<Admin> findFirstByUserNameAndPassword(String username, String password) throws SQLException;
+    
+    List<Customer> findAllCustomer() throws SQLException;
+    
+    Optional<Customer> findFirstByEmail(String email);
     
 }

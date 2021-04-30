@@ -1,26 +1,44 @@
 package vn.aptech.estore.entities;
 
+import java.sql.Date;
+
 public class Customer extends Account {
-    private String name;
+
+    private String firstName;
+    private String lastName;
     private String phone;
-    private String dateOfBirth;
-    private String address;
-    private String city;
+    private Integer age;
+    private Date dateOfBirth;
+    private Address address;
 
     /**
-     * @return the name
+     * @return the firstName
      */
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     /**
-     * @param name the name to set
+     * @param firstName the firstName to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
-    
+
+    /**
+     * @return the lastName
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * @param lastName the lastName to set
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     /**
      * @return the phone
      */
@@ -38,44 +56,60 @@ public class Customer extends Account {
     /**
      * @return the dateOfBirth
      */
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
     /**
      * @param dateOfBirth the dateOfBirth to set
      */
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
     /**
      * @return the address
      */
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
     /**
      * @param address the address to set
      */
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
     /**
-     * @return the city
+     * @return the age
      */
-    public String getCity() {
-        return city;
+    public Integer getAge() {
+        return age;
     }
 
     /**
-     * @param city the city to set
+     * @param age the age to set
      */
-    public void setCity(String city) {
-        this.city = city;
+    public void setAge(Integer age) {
+        this.age = age;
     }
-    
-    
+
+    public void validate() {
+        if (this.getFirstName().length() == 0) {
+            this.addFieldError("firstName", "First name is required.");
+        }
+
+        if (this.getEmail().length() == 0) {
+            this.addFieldError("email", "Email is required.");
+        }
+
+        if (this.getAge() < 18) {
+            this.addFieldError("age", "Age is required and must be 18 or older");
+        }
+    }
+
+    public void addFieldError(String fieldName, String message) {
+
+    }
 }

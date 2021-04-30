@@ -5,22 +5,23 @@
  */
 package vn.aptech.estore.entities;
 
-import java.sql.Date;
+import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 /**
  *
  * @author anhnbt
  */
-class BaseEntity {
-    protected Integer id;
-    protected Date createdAt;
-    protected Timestamp updatedAt;
+class BaseEntity implements Serializable {
+    private Integer id;
+    private Integer createdBy;
+    private Integer modifiedBy;
+    private Timestamp createdDate;
+    private Timestamp modifiedDate;
 
     public BaseEntity() {
-        this.createdAt = Date.valueOf(LocalDate.now());
-        this.updatedAt = new Timestamp(System.currentTimeMillis());
+        this.createdDate = new Timestamp(System.currentTimeMillis());
+        this.modifiedDate = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -38,31 +39,60 @@ class BaseEntity {
     }
 
     /**
-     * @return the createdAt
+     * @return the createdBy
      */
-    public Date getCreatedAt() {
-        return createdAt;
+    public Integer getCreatedBy() {
+        return createdBy;
     }
 
     /**
-     * @param createdAt the createdAt to set
+     * @param createdBy the createdBy to set
      */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedBy(Integer createdBy) {
+        this.createdBy = createdBy;
     }
 
     /**
-     * @return the updatedAt
+     * @return the modifiedBy
      */
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
+    public Integer getModifiedBy() {
+        return modifiedBy;
     }
 
     /**
-     * @param updatedAt the updatedAt to set
+     * @param modifiedBy the modifiedBy to set
      */
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setModifiedBy(Integer modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
+
+    /**
+     * @return the createdDate
+     */
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @param createdDate the createdDate to set
+     */
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    /**
+     * @return the modifiedDate
+     */
+    public Timestamp getModifiedDate() {
+        return modifiedDate;
+    }
+
+    /**
+     * @param modifiedDate the modifiedDate to set
+     */
+    public void setModifiedDate(Timestamp modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
     
 }

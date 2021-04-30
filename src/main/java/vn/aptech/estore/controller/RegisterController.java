@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vn.aptech.estore.service;
-
-import java.sql.SQLException;
+package vn.aptech.estore.controller;
 
 /**
  *
- * @author anhnbt
+ * @author anhnb
  */
-public interface AuthService {
-    
-    boolean isAuthenticated(String username, String password) throws SQLException;
+public class RegisterController {
     
 }
