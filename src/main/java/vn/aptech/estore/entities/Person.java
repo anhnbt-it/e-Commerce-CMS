@@ -5,13 +5,31 @@
  */
 package vn.aptech.estore.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.sql.Date;
+
 /**
  *
  * @author anhnbt
  */
-public class Person {
-    String firstName;
-    String lastName;
-    String email;
-    int age;
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Person extends BaseEntity {
+    protected String firstName;
+    protected String lastName;
+    protected String email;
+    protected String phone;
+    protected Integer age;
+    protected Date dateOfBirth;
+    protected String photo;
+    protected String username;
+    protected String password;
+    protected Gender gender;
+    protected Address address;
 }

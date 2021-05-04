@@ -5,12 +5,12 @@
  */
 package vn.aptech.estore.service;
 
-import vn.aptech.estore.entities.Account;
+import vn.aptech.estore.entities.Employee;
 
 /**
  *
  * @author anhnbt
  */
-public interface UserService extends BaseService<Account, Integer> {
+public interface UserService extends BaseService<Employee, Integer> {
 
 }

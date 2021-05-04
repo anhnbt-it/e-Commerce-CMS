@@ -1,12 +1,14 @@
 package vn.aptech.estore.dao;
 
+import vn.aptech.estore.entities.Product;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public interface DAO<T, ID> {
 
-    int saveOrUpdate(T entity) throws SQLException;
+    Optional<Product> saveOrUpdate(T entity) throws SQLException;
 
     Optional<T> findById(ID id) throws SQLException;
 

@@ -1,6 +1,9 @@
 package vn.aptech.estore.utilities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -12,6 +15,18 @@ public class InputUtils {
         System.out.print("\t" + title);
         String str = scanner.nextLine();
         return str;
+    }
+
+    public static LocalDate inputDate(String title) {
+        while (true) {
+            System.out.println(title + " (yyyy-MM-dd): ");
+            try {
+                return LocalDate.parse(scanner.nextLine());
+            } catch (DateTimeParseException ex) {
+                System.out.println("Invalid date format !!");
+                scanner.nextLine();
+            }
+        }
     }
 
     public static Integer inputInteger(String title) {
@@ -30,7 +45,7 @@ public class InputUtils {
         while (true) {
             System.out.print("\t" + title);
             try {
-                Integer num = scanner.nextInt();
+                int num = scanner.nextInt();
                 if (num < 1) {
                     System.err.println("So luong san pham phai lon hon 0, vui long nhap lai!");
                     continue;

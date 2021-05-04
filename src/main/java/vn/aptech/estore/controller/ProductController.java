@@ -115,6 +115,16 @@ public class ProductController extends BaseController {
         }
     }
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void printMenuHeader() {
+
+    }
+
     private Product stepOne() {
         String choice;
         Product product = null;

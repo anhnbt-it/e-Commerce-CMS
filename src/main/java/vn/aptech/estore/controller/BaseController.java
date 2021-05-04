@@ -1,7 +1,6 @@
 package vn.aptech.estore.controller;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public abstract class BaseController {
 
@@ -22,5 +21,9 @@ public abstract class BaseController {
     public void showMessage(String title) {
         System.out.println(title);
     }
+    
+    public abstract void start();
+    
+    public abstract void printMenuHeader();
 
 }

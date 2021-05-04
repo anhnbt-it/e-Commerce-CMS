@@ -5,31 +5,21 @@
  */
 package vn.aptech.estore;
 
-import java.io.Console;
 import vn.aptech.estore.controller.CategoryController;
 import vn.aptech.estore.controller.ProductController;
 import vn.aptech.estore.controller.ShoppingCartController;
-import vn.aptech.estore.utilities.DBConnection;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 /**
- *
  * @author anhnbt
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
-
     public static void main(String[] args) {
         final Scanner scanner = new Scanner(System.in);
-        Connection conn = DBConnection.getConnection();
+        int userOption;
         try {
             do {
                 System.out.println("========================================================="
@@ -46,9 +36,9 @@ public class Main {
                 System.out.println("\t8. Dang nhap");
                 System.out.print("Nhap lua chon [1-7]: ");
 
-                final int input = Integer.parseInt(scanner.nextLine());
+                userOption = Integer.parseInt(scanner.nextLine());
 
-                switch (input) {
+                switch (userOption) {
                     case 1:
                         showProductOption(scanner);
                         break;
@@ -192,9 +182,9 @@ public class Main {
         System.out.println("Mat khau: ");
         String password = scanner.nextLine();
         if (username.equals("admin") && password.equals("123456")) {
-            System.out.println("??ng nh?p thành công! Chào m?ng " + username);
+            System.out.println("??ng nh?p thï¿½nh cï¿½ng! Chï¿½o m?ng " + username);
         } else {
-            System.out.println("??ng nh?p th?t b?i. Tên ??ng nh?p ho?c m?t kh?u không chính xác!");
+            System.out.println("??ng nh?p th?t b?i. Tï¿½n ??ng nh?p ho?c m?t kh?u khï¿½ng chï¿½nh xï¿½c!");
         }
     }
 

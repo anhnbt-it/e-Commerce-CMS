@@ -5,10 +5,14 @@
  */
 package vn.aptech.estore.entities;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author anhnb
  */
-public class Admin extends Account {
-    
+public class Employee extends Person {
+    private Department department;
+    private LocalDate hireDate;
+    private Double salary;
 }

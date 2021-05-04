@@ -3,6 +3,7 @@ package vn.aptech.estore.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vn.aptech.estore.entities.Category;
+import vn.aptech.estore.entities.Product;
 import vn.aptech.estore.utilities.DBConnection;
 
 import java.sql.*;
@@ -14,7 +15,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     private static final Logger LOGGER = LogManager.getLogger(CategoryDAOImpl.class);
 
     @Override
-    public int saveOrUpdate(Category entity) throws SQLException {
+    public Optional<Product> saveOrUpdate(Category entity) throws SQLException {
         int rowCount = -1;
         Connection conn = null;
         PreparedStatement pstmt;
