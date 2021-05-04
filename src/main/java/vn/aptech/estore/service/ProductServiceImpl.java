@@ -7,6 +7,7 @@ package vn.aptech.estore.service;
 
 import vn.aptech.estore.dao.ProductDAO;
 import vn.aptech.estore.dao.ProductDAOImpl;
+import vn.aptech.estore.entities.Category;
 import vn.aptech.estore.entities.Product;
 
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 
 public class ProductServiceImpl implements ProductService {
-    
+
     private final ProductDAO productDAO;
 
     public ProductServiceImpl(ProductDAO productDAO) {
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int saveOrUpdate(Product entity) throws SQLException {
+    public Optional<Product> saveOrUpdate(Product entity) throws SQLException {
         return this.productDAO.saveOrUpdate(entity);
     }
 
@@ -55,5 +56,5 @@ public class ProductServiceImpl implements ProductService {
     public boolean existById(Integer id) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

@@ -1,10 +1,12 @@
-package vn.aptech.estore.controller;
+package vn.aptech.estore.menu;
 
 import vn.aptech.estore.service.AuthenticationServiceImpl;
 import vn.aptech.estore.utilities.InputUtils;
 import vn.aptech.estore.service.AuthenticationService;
 
-public class AuthController {
+import java.sql.SQLException;
+
+public class AuthMenu extends BaseMenu {
 
     //viewOrders
     //viewCustomers
@@ -14,7 +16,7 @@ public class AuthController {
     
     private final AuthenticationService authService;
 
-    public AuthController() {
+    public AuthMenu() {
         this.authService = new AuthenticationServiceImpl();
     }
     
@@ -39,5 +41,35 @@ public class AuthController {
     
     public void forgottenPassword() {
         
+    }
+
+    @Override
+    public void create() throws SQLException {
+
+    }
+
+    @Override
+    public void show() throws SQLException {
+
+    }
+
+    @Override
+    public void edit() throws SQLException {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void printMenuHeader() {
+        this.displayTitle("Dang nhap");
     }
 }

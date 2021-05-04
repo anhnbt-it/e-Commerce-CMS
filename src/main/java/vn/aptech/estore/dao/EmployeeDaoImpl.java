@@ -5,28 +5,22 @@
  */
 package vn.aptech.estore.dao;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import vn.aptech.estore.entities.Employee;
+import vn.aptech.estore.utilities.DBConnection;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import vn.aptech.estore.entities.Employee;
-import vn.aptech.estore.entities.Customer;
-import vn.aptech.estore.entities.Product;
-import vn.aptech.estore.utilities.DBConnection;
-
-public class AccountDAOImpl implements AccountDAO {
+public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
-    public Optional<Customer> findFirstByUsernameAndPassword(String username, String password) throws SQLException {
+    public Optional<Employee> findFirstByUsernameAndPassword(String username, String password) throws SQLException {
         Connection conn = null;
-        PreparedStatement pstmt;
-        Customer customer = null;
-        ResultSet rs;
+        PreparedStatement pstmt = null;
+        Employee employee = null;
+        ResultSet rs = null;
         try {
             String sql = "SELECT * FROM tbl_customers WHERE username = ? AND password = ?";
             conn = DBConnection.getConnection();
@@ -36,42 +30,33 @@ public class AccountDAOImpl implements AccountDAO {
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                customer = new Customer();
-                customer.setId(rs.getInt("id"));
-                customer.setUsername(rs.getString("username"));
-                customer.setEmail(rs.getString("email"));
-                customer.setFirstName(rs.getString("name"));
-                customer.setPhone(rs.getString("phone"));
-                customer.setDateOfBirth(rs.getDate("dateOfBirth"));
+                employee = new Employee();
+                employee.setId(rs.getInt("id"));
+                employee.setUsername(rs.getString("username"));
+                employee.setEmail(rs.getString("email"));
+                employee.setFirstName(rs.getString("name"));
+                employee.setPhone(rs.getString("phone"));
+                employee.setDateOfBirth(rs.getDate("dateOfBirth"));
             }
             conn.commit();
-            pstmt.close();
         } catch (SQLException e) {
-            conn.rollback();
+            if (conn != null) conn.rollback();
         } finally {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
             if (conn != null) conn.setAutoCommit(true);
         }
-        return Optional.of(customer);
+        return Optional.ofNullable(employee);
     }
 
     @Override
-    public Optional<Employee> findFirstByUserNameAndPassword(String username, String password) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Customer> findAllCustomer() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Optional<Customer> findFirstByEmail(String email) {
+    public Optional<Employee> findFirstByEmail(String email) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Product> saveOrUpdate(Employee entity) throws SQLException {
-        return null;
+    public Optional<Employee> saveOrUpdate(Employee entity) throws SQLException {
+        return Optional.empty();
     }
 
     @Override

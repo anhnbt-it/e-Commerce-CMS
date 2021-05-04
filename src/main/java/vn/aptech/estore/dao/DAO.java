@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface DAO<T, ID> {
 
-    Optional<Product> saveOrUpdate(T entity) throws SQLException;
+    Optional<T> saveOrUpdate(T entity) throws SQLException;
 
     Optional<T> findById(ID id) throws SQLException;
 

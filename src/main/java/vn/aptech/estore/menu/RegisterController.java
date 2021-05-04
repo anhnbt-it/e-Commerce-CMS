@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vn.aptech.estore.controller;
+package vn.aptech.estore.menu;
 
 /**
  *
  * @author anhnb
  */
-public class HomeController {
+public class RegisterController {
     
 }

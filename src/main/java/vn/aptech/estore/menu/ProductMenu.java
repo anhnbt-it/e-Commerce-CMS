@@ -1,4 +1,4 @@
-package vn.aptech.estore.controller;
+package vn.aptech.estore.menu;
 
 import vn.aptech.estore.service.ImageService;
 import vn.aptech.estore.utilities.InputUtils;
@@ -22,12 +22,13 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+
 import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.service.ImageServiceImpl;
 
-public class ProductController extends BaseController {
+public class ProductMenu extends BaseMenu {
 
-    private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
+    private static final Logger LOGGER = LogManager.getLogger(ProductMenu.class);
 
     DateFormat dateFormat = new SimpleDateFormat(Constant.DATE_FORMAT);
 
@@ -35,7 +36,7 @@ public class ProductController extends BaseController {
     private final CategoryService categoryService;
     private final ImageService imageService;
 
-    public ProductController() {
+    public ProductMenu() {
         this.productService = new ProductServiceImpl();
         this.categoryService = new CategoryServiceImpl();
         this.imageService = new ImageServiceImpl();
@@ -55,7 +56,7 @@ public class ProductController extends BaseController {
     @Override
     public void create() {
         displayTitle("Them san pham moi");
-        showMessage("Cac truong danh dau * la bat buoc phai nhap.");
+        show("Cac truong danh dau * la bat buoc phai nhap.");
         Product product = this.stepOne();
         this.stepTwo(product);
     }
@@ -66,24 +67,24 @@ public class ProductController extends BaseController {
         try {
             List<Product> products = productService.findAll();
             if (products.size() < 1) {
-                showMessage("Danh sach san pham trong!");
+                show("Danh sach san pham trong!");
             } else {
                 System.out.println("ID\tTEN\tGIA\t\tGIA GOC\t\tDISCOUNT");
                 DecimalFormat formatter = new DecimalFormat("###,###,###");
                 for (Product product : products) {
                     Optional<Category> category = categoryService.findById(product.getCategoryId());
                     System.out.printf("%d\t" // Id
-                            + "%s\t" // Ten SP
-                            + "%s\t" // Gia cu
-                            + "%s\t" // Giam gia
-                            + "%s\t" // Gia moi
-                            + "%n", product.getId(),
+                                    + "%s\t" // Ten SP
+                                    + "%s\t" // Gia cu
+                                    + "%s\t" // Giam gia
+                                    + "%s\t" // Gia moi
+                                    + "%n", product.getId(),
                             product.getName(),
                             formatter.format(product.getUnitPrice()) + " VND",
                             product.getDiscount() + "%",
                             formatter.format(product.getNewPrice()) + " VND");
                 }
-                showMessage("Nhan <enter> de thoat.");
+                show("Nhan <enter> de thoat.");
                 InputUtils.nextLine();
             }
         } catch (SQLException e) {
@@ -103,12 +104,12 @@ public class ProductController extends BaseController {
         try {
             if (productService.existById(productId)) {
                 if (productService.deleteById(productId)) {
-                    showMessage("Xoa san pham thanh cong!");
+                    show("Xoa san pham thanh cong!");
                 } else {
-                    showMessage("Da xay ra loi!");
+                    show("Da xay ra loi!");
                 }
             } else {
-                showMessage("San pham khong ton tai.");
+                show("San pham khong ton tai.");
             }
         } catch (SQLException e) {
             LOGGER.error(e);
@@ -117,12 +118,40 @@ public class ProductController extends BaseController {
 
     @Override
     public void start() {
-
+        int userOption;
+        do {
+            printMenuHeader();
+            userOption = Integer.parseInt(InputUtils.inputString("Nhap lua chon [1-5]: "));
+            switch (userOption) {
+                case 1:
+                    this.show();
+                    break;
+                case 2:
+                    this.create();
+                    break;
+                case 3:
+//                    productController.edit(scanner);
+                    break;
+                case 4:
+//                    productController.delete(scanner);
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Lua chon khong ton tai.\n\n");
+            }
+        } while (true);
     }
 
     @Override
     public void printMenuHeader() {
-
+        displayTitle("San pham");
+        System.out.println("Vui long chon chuc nang sau do nhan <enter>: ");
+        System.out.println("\t1. Danh sach tat ca san pham");
+        System.out.println("\t2. Them moi mot san pham");
+        System.out.println("\t3. Chinh sua mot san pham");
+        System.out.println("\t4. Xoa mot san pham");
+        System.out.println("\t5. Quay lai man hinh chinh");
     }
 
     private Product stepOne() {
@@ -176,10 +205,12 @@ public class ProductController extends BaseController {
                 product.setDescription(description);
                 product.setQuantity(quantity);
 
-                if (productService.saveOrUpdate(product) != -1) {
-                    showMessage("Them san pham moi thanh cong!");
+                Optional<Product> createProduct = productService.saveOrUpdate(product);
+
+                if (createProduct.isPresent()) {
+                    show("Them san pham moi thanh cong!");
                 } else {
-                    showMessage("Them san pham moi that bai!");
+                    show("Them san pham moi that bai!");
                 }
 
                 choice = InputUtils.inputString("Ban muon them san pham khac khong? (y/N): ");

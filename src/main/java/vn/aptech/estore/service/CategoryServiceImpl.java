@@ -1,20 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vn.aptech.estore.service;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+
 import vn.aptech.estore.dao.CategoryDAO;
 import vn.aptech.estore.dao.CategoryDAOImpl;
 import vn.aptech.estore.entities.Category;
 
-
 public class CategoryServiceImpl implements CategoryService {
-    
+
     private final CategoryDAO categoryDAO;
 
     public CategoryServiceImpl(CategoryDAO categoryDAO) {
@@ -26,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public int saveOrUpdate(Category category) throws SQLException {
+    public Optional<Category> saveOrUpdate(Category category) throws SQLException {
         return categoryDAO.saveOrUpdate(category);
     }
 
@@ -49,5 +44,5 @@ public class CategoryServiceImpl implements CategoryService {
     public boolean existById(Integer id) throws SQLException {
         return categoryDAO.existsById(id);
     }
-    
+
 }

@@ -5,6 +5,8 @@
  */
 package vn.aptech.estore.service;
 
+import vn.aptech.estore.entities.Category;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import java.util.Optional;
  */
 public interface BaseService<T, ID> {
     
-    public int saveOrUpdate(T entity) throws SQLException;
+    public Optional<T> saveOrUpdate(T entity) throws SQLException;
     
     public List<T> findAll() throws SQLException;
     

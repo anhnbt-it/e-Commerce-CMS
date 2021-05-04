@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vn.aptech.estore.controller;
+package vn.aptech.estore.menu;
 
 import java.sql.SQLException;
 
@@ -11,7 +11,7 @@ import java.sql.SQLException;
  *
  * @author anhnbt
  */
-public class UserController extends BaseController {
+public class UserMenu extends BaseMenu {
 
     @Override
     public void create() throws SQLException {

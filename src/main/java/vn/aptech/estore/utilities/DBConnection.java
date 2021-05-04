@@ -10,23 +10,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- *
  * @author anhnbt
  */
 public class DBConnection {
 
-    private static final String CONNECTION_URL = "jdbc:sqlserver://localhost:1433;databaseName=quanlysanpham;user=sa;password=KhoaiTay@2019";
-    
+    private static final String CONNECTION_URL = "jdbc:sqlserver://localhost:1433;databaseName=ecommerce_db;user=sa;password=KhoaiTay@2019";
+
     public static Connection getConnection() throws SQLException {
-        Connection conn = null;
-        try {
-//            System.out.println("Connecting to SQL Server ...");
-            conn = DriverManager.getConnection(CONNECTION_URL);
+        Connection conn;
+        //            System.out.println("Connecting to SQL Server ...");
+        conn = DriverManager.getConnection(CONNECTION_URL);
 //            System.out.println("Connected to database.");
-        } catch (SQLException e) {
-            throw e;
-        }
         return conn;
     }
-    
+
 }

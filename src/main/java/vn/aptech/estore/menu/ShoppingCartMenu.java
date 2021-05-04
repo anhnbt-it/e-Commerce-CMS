@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vn.aptech.estore.controller;
+package vn.aptech.estore.menu;
 
 import vn.aptech.estore.utilities.InputUtils;
+
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import vn.aptech.estore.entities.Category;
 import vn.aptech.estore.entities.Product;
 import vn.aptech.estore.service.CategoryService;
@@ -23,16 +25,15 @@ import vn.aptech.estore.service.ProductServiceImpl;
 import vn.aptech.estore.service.ShoppingCartServiceImpl;
 
 /**
- *
  * @author anhnbt
  */
-public class ShoppingCartController extends BaseController {
+public class ShoppingCartMenu extends BaseMenu {
 
     private final CategoryService categoryService;
     private final ProductService productService;
     private final ShoppingCartService shoppingCartService;
 
-    public ShoppingCartController() {
+    public ShoppingCartMenu() {
         this.categoryService = new CategoryServiceImpl();
         this.productService = new ProductServiceImpl();
         this.shoppingCartService = new ShoppingCartServiceImpl();
@@ -50,7 +51,7 @@ public class ShoppingCartController extends BaseController {
         try {
             List<Category> categories = categoryService.findAll();
             if (categories.size() < 1) {
-                showMessage("Danh sach danh muc trong!");
+                show("Danh sach danh muc trong!");
             } else {
                 System.out.println("Co tat ca '" + categories.size() + "' san pham");
                 System.out.println("ID\t\tNAME");
@@ -61,7 +62,7 @@ public class ShoppingCartController extends BaseController {
                 this.showProductByCategoryId(categoryId);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CategoryController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CategoryMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -75,6 +76,36 @@ public class ShoppingCartController extends BaseController {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void start() {
+        do {
+            this.printMenuHeader();
+            int userOption = InputUtils.inputInteger("Nhap lua chon [1-3]: ");
+
+            switch (userOption) {
+                case 1:
+                    this.show("Nhap lua chon [1-3]: ");
+                    break;
+                case 2:
+                    this.showYourCart();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Lua chon khong ton tai.\n\n");
+            }
+        } while (true);
+    }
+
+    @Override
+    public void printMenuHeader() {
+        displayTitle("Mua hang");
+        System.out.println("Vui long chon chuc nang sau do nhan <enter>: ");
+        System.out.println("\t1. Danh sach tat ca danh muc");
+        System.out.println("\t2. Gio hang");
+        System.out.println("\t3. Quay lai man hinh chinh");
+    }
+
     public void showProductByCategoryId(Integer categoryId) {
         Optional<Category> category;
         try {
@@ -83,7 +114,7 @@ public class ShoppingCartController extends BaseController {
                 displayTitle("Danh muc san pham: " + category.get().getName());
                 List<Product> products = productService.findAllByCategoryId(categoryId);
                 if (products.size() == 0) {
-                    showMessage("Khong co san pham nao trong danh muc nay!");
+                    show("Khong co san pham nao trong danh muc nay!");
                 } else {
                     for (Product prod : products) {
                         System.out.println(prod.toString());
@@ -92,17 +123,17 @@ public class ShoppingCartController extends BaseController {
                     this.addProductToCart(productId);
                 }
             } else {
-                showMessage("Khong ton tai danh muc nay!");
+                show("Khong ton tai danh muc nay!");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ShoppingCartController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShoppingCartMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void showYourCart() {
         Hashtable<Integer, Product> items = shoppingCartService.getItems();
         if (items.isEmpty()) {
-            showMessage("Gio hang cua ban trong!");
+            show("Gio hang cua ban trong!");
         } else {
             Enumeration<Integer> enu = items.keys();
             double total = 0;
@@ -121,12 +152,12 @@ public class ShoppingCartController extends BaseController {
         if (product.isPresent()) {
             if (product.get().getQuantity() > 0) {
                 shoppingCartService.addItem(product.get());
-                showMessage("Them san pham vao gio hang thanh cong!");
+                show("Them san pham vao gio hang thanh cong!");
             } else {
-                showMessage("San pham tam het hang!");
+                show("San pham tam het hang!");
             }
         } else {
-            showMessage("Khong ton tai san pham nay!");
+            show("Khong ton tai san pham nay!");
         }
     }
 
