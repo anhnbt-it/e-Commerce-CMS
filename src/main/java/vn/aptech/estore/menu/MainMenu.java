@@ -1,27 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vn.aptech.estore.menu;
 
-import vn.aptech.estore.utilities.InputUtils;
-import vn.aptech.estore.utilities.ResourceBundlesUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 /**
  * @author anhnbt
  */
 public class MainMenu extends BaseMenu {
+    private static final Logger LOGGER = LogManager.getLogger(MainMenu.class);
 
-    public static final int USER_OPTION_FIND_ALL = 1;
-    public static final int USER_OPTION_FIND_ONE = 2;
-    public static final int USER_OPTION_INSERT = 3;
-    public static final int USER_OPTION_UPDATE = 4;
-    public static final int USER_OPTION_DELETE = 4;
-    public static final int USER_OPTION_EXIT = 0;
+    private static final int USER_OPTION_FIND_ALL = 1;
+    private static final int USER_OPTION_FIND_ONE = 2;
+    private static final int USER_OPTION_INSERT = 3;
+    private static final int USER_OPTION_UPDATE = 4;
+    private static final int USER_OPTION_DELETE = 4;
+    private static final int USER_OPTION_EXIT = 0;
+
+    private final Scanner scanner;
+    private final ResourceBundle messages;
+
+    public MainMenu(Scanner scanner, ResourceBundle messages) {
+        this.scanner = scanner;
+        this.messages = messages;
+    }
 
     @Override
     public void create() throws SQLException {
@@ -45,33 +51,39 @@ public class MainMenu extends BaseMenu {
 
     @Override
     public void start() {
-        int userOption;
+        int choice;
         try {
             do {
                 this.printMenuHeader();
-                userOption = InputUtils.inputInteger("Nhap lua chon [1-7]: ");
-
-                switch (userOption) {
-                    case 1:
-                        ProductMenu productController = new ProductMenu();
+                show(MessageFormat.format(messages.getString("menu.choice"), 1, 7));
+                choice = scanner.nextInt();
+                scanner.nextLine();
+                switch (choice) {
+                    case USER_OPTION_FIND_ALL:
+                        ProductMenu productController = new ProductMenu(scanner, messages);
                         productController.start();
                         break;
-                    case 2:
+                    case USER_OPTION_FIND_ONE:
                         CategoryMenu categoryController = new CategoryMenu();
                         categoryController.start();
                         break;
-                    case 3:
-                        System.out.println("Customers");
+                    case USER_OPTION_INSERT:
+                        show("Customers");
                         break;
-                    case 4:
-                        System.out.println("Orders");
+                    case USER_OPTION_UPDATE:
+                        show("Orders");
                         break;
                     case 5:
-                        System.out.println("Sign out");
+                        show("Sign out");
                         break;
-                    case 6:
-                        System.out.println("Thoat khoi ung dung...");
-                        System.exit(0);
+                    case USER_OPTION_EXIT:
+                        show(messages.getString("text.exits"));
+                        String choiceString = scanner.nextLine();
+                        if ("y".equalsIgnoreCase(choiceString)) {
+                            show(messages.getString("text.bye"));
+                            System.exit(0);
+                        }
+                        break;
                     case 7:
                         ShoppingCartMenu shoppingCartController = new ShoppingCartMenu();
                         shoppingCartController.start();
@@ -81,11 +93,11 @@ public class MainMenu extends BaseMenu {
                         authController.start();
                         break;
                     default:
-                        System.out.println(MessageFormat.format(ResourceBundlesUtils.getBundle().getString("text.invalidOption"), userOption) + "\n\n");
+                        show(MessageFormat.format(messages.getString("text.invalidChoice"), choice) + "\n\n");
                 }
             } while (true);
-        } catch (NumberFormatException ex) {
-            System.err.println("Main: Da co loi xay ra: " + ex.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("MainMenu.start exception: ", e);
         }
     }
 

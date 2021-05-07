@@ -22,6 +22,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import vn.aptech.estore.constant.Constant;
 import vn.aptech.estore.service.ImageServiceImpl;
@@ -36,7 +38,13 @@ public class ProductMenu extends BaseMenu {
     private final CategoryService categoryService;
     private final ImageService imageService;
 
-    public ProductMenu() {
+    private final Scanner scanner;
+    private final ResourceBundle messages;
+
+    public ProductMenu(Scanner scanner, ResourceBundle messages) {
+        this.scanner = scanner;
+        this.messages = messages;
+
         this.productService = new ProductServiceImpl();
         this.categoryService = new CategoryServiceImpl();
         this.imageService = new ImageServiceImpl();
