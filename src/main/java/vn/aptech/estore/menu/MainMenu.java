@@ -6,8 +6,10 @@
 package vn.aptech.estore.menu;
 
 import vn.aptech.estore.utilities.InputUtils;
+import vn.aptech.estore.utilities.ResourceBundlesUtils;
 
 import java.sql.SQLException;
+import java.text.MessageFormat;
 
 /**
  * @author anhnbt
@@ -79,7 +81,7 @@ public class MainMenu extends BaseMenu {
                         authController.start();
                         break;
                     default:
-                        System.out.println("Lua chon khong ton tai\n\n");
+                        System.out.println(MessageFormat.format(ResourceBundlesUtils.getBundle().getString("text.invalidOption"), userOption) + "\n\n");
                 }
             } while (true);
         } catch (NumberFormatException ex) {
