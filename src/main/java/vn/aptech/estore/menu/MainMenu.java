@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -55,7 +54,7 @@ public class MainMenu extends BaseMenu {
         try {
             do {
                 this.printMenuHeader();
-                show(MessageFormat.format(messages.getString("menu.choice"), 1, 7));
+                show(messages.getString("message.choice.enter"));
                 choice = scanner.nextInt();
                 scanner.nextLine();
                 switch (choice) {
@@ -68,19 +67,19 @@ public class MainMenu extends BaseMenu {
                         categoryController.start();
                         break;
                     case USER_OPTION_INSERT:
-                        show("Customers");
+                        showNewLine("Customers");
                         break;
                     case USER_OPTION_UPDATE:
-                        show("Orders");
+                        showNewLine("Orders");
                         break;
                     case 5:
-                        show("Sign out");
+                        showNewLine("Sign out");
                         break;
                     case USER_OPTION_EXIT:
-                        show(messages.getString("text.exits"));
+                        show(messages.getString("message.confirm.exit"));
                         String choiceString = scanner.nextLine();
                         if ("y".equalsIgnoreCase(choiceString)) {
-                            show(messages.getString("text.bye"));
+                            showNewLine(messages.getString("message.bye"));
                             System.exit(0);
                         }
                         break;
@@ -93,7 +92,7 @@ public class MainMenu extends BaseMenu {
                         authController.start();
                         break;
                     default:
-                        show(MessageFormat.format(messages.getString("text.invalidChoice"), choice) + "\n\n");
+                        show(messages.getString("message.choice.invalid") + "\n\n");
                 }
             } while (true);
         } catch (Exception e) {
@@ -103,16 +102,16 @@ public class MainMenu extends BaseMenu {
 
     @Override
     public void printMenuHeader() {
-        this.displayTitle("Welcome");
-        System.out.println("Vui long chon chuc nang sau do nhan <enter>: ");
-        System.out.println("\t1. San pham");
-        System.out.println("\t2. Danh muc");
-        System.out.println("\t3. Khach hang");
-        System.out.println("\t4. Don hang");
-        System.out.println("\t5. Dang xuat");
-        System.out.println("\t6. Thoat");
-        System.out.println("\t7. Mua hang");
-        System.out.println("\t8. Dang nhap");
+        displayTitle(messages.getString("greetings"));
+        showNewLine(messages.getString("message.choice.title"));
+        showNewLine("\t1. " + messages.getString("menu.products"));
+        showNewLine("\t2. " + messages.getString("menu.categories"));
+        showNewLine("\t3. " + messages.getString("menu.customers"));
+        showNewLine("\t4. " + messages.getString("menu.orders"));
+        showNewLine("\t5. " + messages.getString("menu.signOut"));
+        showNewLine("\t6. " + messages.getString("menu.quit"));
+        showNewLine("\t7. " + messages.getString("menu.shoppingCart"));
+        showNewLine("\t8. " + messages.getString("menu.signIn"));
     }
 
 }

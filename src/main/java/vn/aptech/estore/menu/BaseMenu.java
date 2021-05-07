@@ -19,6 +19,10 @@ public abstract class BaseMenu {
     }
 
     public void show(String title) {
+        System.out.print(title);
+    }
+
+    public void showNewLine(String title) {
         System.out.println(title);
     }
 
