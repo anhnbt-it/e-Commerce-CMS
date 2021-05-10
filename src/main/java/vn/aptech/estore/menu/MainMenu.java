@@ -108,7 +108,7 @@ public class MainMenu extends BaseMenu {
         showNewLine("\t2. " + messages.getString("menu.categories"));
         showNewLine("\t3. " + messages.getString("menu.customers"));
         showNewLine("\t4. " + messages.getString("menu.orders"));
-        showNewLine("\t5. " + messages.getString("menu.signOut"));
+        showNewLine("\t5. " + messages.getString("menu.account.signOut"));
         showNewLine("\t6. " + messages.getString("menu.quit"));
         showNewLine("\t7. " + messages.getString("menu.shoppingCart"));
         showNewLine("\t8. " + messages.getString("menu.signIn"));
