@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -18,7 +19,7 @@ public class Product extends BaseEntity implements Serializable {
     private String description;
     private Integer quantity;
     private Double unitPrice;
-    private Integer discount;
+    private Double discount;
     private String status;
     private Integer viewCount;
 
@@ -27,7 +28,13 @@ public class Product extends BaseEntity implements Serializable {
     private Integer supplierId;
 
     public Double getNewPrice() {
-        return this.unitPrice - ((this.unitPrice * this.discount) / 100);
+        return this.unitPrice - (this.unitPrice * this.discount);
+    }
+
+    public String getPercentageDiscount() {
+        NumberFormat defaultFormat = NumberFormat.getPercentInstance();
+        defaultFormat.setMinimumFractionDigits(1);
+        return defaultFormat.format(discount);
     }
 
     public void print() {
