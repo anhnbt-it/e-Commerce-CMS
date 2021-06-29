@@ -21,11 +21,10 @@ public class Product extends BaseEntity implements Serializable {
     private Double unitPrice;
     private Double discount;
     private String status;
-    private Integer viewCount;
 
-    private Integer categoryId;
-    private Integer brandId;
-    private Integer supplierId;
+    private Category category;
+    private Brand brand;
+    private Supplier supplier;
 
     public Double getNewPrice() {
         return this.unitPrice - (this.unitPrice * this.discount);
@@ -44,6 +43,9 @@ public class Product extends BaseEntity implements Serializable {
         System.out.println("Price        : " + getUnitPrice());
         System.out.println("Quantity     : " + getQuantity());
         System.out.println("Discount     : " + getDiscount());
+        System.out.println("Category     : " + getCategory().getName());
+        System.out.println("Brand        : " + getBrand().getName());
+        System.out.println("Supplier     : " + getSupplier().getName());
         System.out.println("/------------------------------/\n");
     }
 }

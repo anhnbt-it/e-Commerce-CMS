@@ -15,7 +15,7 @@ import vn.aptech.estore.entities.Customer;
 /**
  * @author anhnbt
  */
-public interface EmployeeDao extends DAO<Employee, Integer> {
+public interface EmployeeDao extends BaseDao<Employee, Integer> {
 
     Optional<Employee> findFirstByUsernameAndPassword(String username, String password) throws SQLException;
 

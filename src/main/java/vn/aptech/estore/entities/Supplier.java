@@ -5,40 +5,20 @@
  */
 package vn.aptech.estore.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author anhnbt
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Supplier extends BaseEntity {
-    private String name;
-
-    public Supplier() {
-        super();
-    }
-
-    /**
-     *
-     * @param name
-     */
-    public Supplier(String name) {
-        this();
-        this.name = name;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    
-    
+    String name;
+    String thumbnailUrl;
+    String city;
+    String contactNumber;
 }

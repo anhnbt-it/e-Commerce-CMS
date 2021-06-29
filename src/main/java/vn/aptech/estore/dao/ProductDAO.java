@@ -5,7 +5,7 @@ import java.util.List;
 
 import vn.aptech.estore.entities.Product;
 
-public interface ProductDAO extends DAO<Product, Integer> {
+public interface ProductDAO extends BaseDao<Product, Integer> {
 
     public List<Product> findAllByCategoryId(Integer categoryId) throws SQLException;
 

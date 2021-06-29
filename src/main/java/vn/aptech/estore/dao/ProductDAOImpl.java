@@ -9,12 +9,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import vn.aptech.estore.entities.Brand;
+import vn.aptech.estore.entities.Category;
 
 public class ProductDAOImpl implements ProductDAO {
 
     private final Logger LOGGER = LogManager.getLogger(ProductDAOImpl.class);
 
-    private static final String SQL_INSERT = "INSERT INTO tbl_products (category_id, supplier_id, brand_id, name, price, thumbnail_url, description, quantity, status, discount, view_count, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT = "INSERT INTO tbl_products (category_id, supplier_id, brand_id, name, price, thumbnail_url, description, quantity, status, discount, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = "SELECT * FROM tbl_products WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM tbl_products WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM tbl_products ORDER BY id DESC";
@@ -22,13 +24,22 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String SQL_SELECT_ALL_BY_CATEGORY_ID = "SELECT * FROM tbl_products WHERE category_id = ? ORDER BY id DESC";
     private static final String SQL_EXISTS_BY_ID = "SELECT count(*) FROM tbl_products WHERE id = ?";
     private static final String SQL_COUNT_ALL = "SELECT count(1) FROM tbl_products";
+    
+    private final CategoryDAO categoryDAO;
+    private final SupplierDao supplierDao;
 
+    public ProductDAOImpl() {
+        categoryDAO = new CategoryDAOImpl();
+        supplierDao = new SupplierDaoImpl();
+    }
+    
     @Override
     public Optional<Product> saveOrUpdate(Product entity) throws SQLException {
         Product product = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
-        int count;
+        ResultSet rs = null;
+        int rowsAffected = -1;
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
@@ -37,34 +48,36 @@ public class ProductDAOImpl implements ProductDAO {
                 throw new UnsupportedOperationException("Method chua hoan thien!");
             } else {
                 pstmt = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
-                pstmt.setInt(1, entity.getCategoryId());
-                pstmt.setInt(2, entity.getSupplierId());
-                pstmt.setInt(3, entity.getBrandId());
+                pstmt.setInt(1, entity.getCategory().getId());
+                pstmt.setInt(2, entity.getSupplier().getId());
+                pstmt.setInt(3, entity.getBrand().getId());
                 pstmt.setNString(4, entity.getName());
                 pstmt.setDouble(5, entity.getUnitPrice());
                 pstmt.setString(6, entity.getThumbnailUrl());
                 pstmt.setNString(7, entity.getDescription());
                 pstmt.setInt(8, entity.getQuantity());
                 pstmt.setString(9, entity.getStatus());
-                pstmt.setInt(10, entity.getDiscount());
-                pstmt.setInt(11, entity.getViewCount());
-                pstmt.setTimestamp(12, entity.getModifiedDate());
-                count = pstmt.executeUpdate();
-                if (count > 0) {
-                    ResultSet rs = pstmt.getGeneratedKeys();
+                pstmt.setDouble(10, entity.getDiscount());
+                pstmt.setTimestamp(11, entity.getModifiedDate());
+                rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    rs = pstmt.getGeneratedKeys();
                     if (rs.next()) {
-                        product = new Product();
-                        // to do
+                        product = this.mapRersultSetToObject(rs);
                     }
                 }
             }
             conn.commit();
-        } catch (SQLException e) {
-            LOGGER.error("saveOrUpdate exception", e);
+        } catch (SQLException ex) {
             if (conn != null) conn.rollback();
+            throw ex;
         } finally {
+            if (rs != null) rs.close();
             if (pstmt != null) pstmt.close();
-            if (conn != null) conn.setAutoCommit(true);
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
         }
         return Optional.ofNullable(product);
     }
@@ -81,18 +94,10 @@ public class ProductDAOImpl implements ProductDAO {
             pstmt.setInt(1, productId);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                product = new Product();
-                product.setId(rs.getInt("id"));
-                product.setBrandId(rs.getInt("brand_id"));
-                product.setCategoryId(rs.getInt("category_id"));
-                product.setName(rs.getString("name"));
-                product.setQuantity(rs.getInt("quantity"));
-                product.setUnitPrice(rs.getDouble("price"));
-                product.setDescription(rs.getString("description"));
-                product.setStatus(rs.getString("status"));
+                product = this.mapRersultSetToObject(rs);
             }
         } catch (SQLException ex) {
-            System.err.println("ProductDAOImpl: Da co loi xay ra" + ex.getMessage());
+            throw ex;
         } finally {
             if (rs != null) rs.close();
             if (pstmt != null) pstmt.close();
@@ -102,97 +107,91 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        Connection conn;
-        PreparedStatement pstmt;
-        int count = -1;
+    public boolean existsById(Integer id) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int rowsAffected = -1;
         try {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(SQL_EXISTS_BY_ID);
             pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             if (rs.next()) {
-                count = rs.getInt(1);
+                rowsAffected = rs.getInt(1);
             }
-        } catch (Exception e) {
-            LOGGER.error(e);
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
         }
-        return count > 0;
+        return rowsAffected > 0;
     }
 
     @Override
     public List<Product> findAll() throws SQLException {
         List<Product> products = null;
         Connection conn = null;
-        PreparedStatement pstmt;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
         try {
             conn = DBConnection.getConnection();
-            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(SQL_SELECT_ALL);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             products = new ArrayList<>();
             while (rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getInt("id"));
-                product.setCategoryId(rs.getInt("category_id"));
-                product.setSupplierId(rs.getInt("supplier_id"));
-                product.setBrandId(rs.getInt("brand_id"));
-                product.setName(rs.getString("name"));
-                product.setUnitPrice(rs.getDouble("price"));
-                product.setUnitPrice(rs.getDouble("price"));
-                product.setThumbnailUrl(rs.getString("thumbnail_url"));
-                product.setDescription(rs.getString("description"));
-                product.setQuantity(rs.getInt("quantity"));
-                product.setStatus(rs.getString("status"));
-                product.setDiscount(rs.getInt("discount"));
-                product.setViewCount(rs.getInt("view_count"));
-                product.setModifiedDate(rs.getTimestamp("updated_at"));
+                Product product = this.mapRersultSetToObject(rs);
                 products.add(product);
             }
-            conn.commit();
-            pstmt.close();
-        } catch (SQLException e) {
-            LOGGER.error(e);
-            conn.rollback();
+        } catch (SQLException ex) {
+            throw ex;
         } finally {
-            if (conn != null) conn.setAutoCommit(true);
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
         }
         return products;
     }
 
     @Override
-    public long count() {
-        Connection conn;
-        Statement stmt;
+    public long count() throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
         long count = 0;
         try {
             conn = DBConnection.getConnection();
             stmt = conn.createStatement();
-            try (ResultSet rs = stmt.executeQuery(SQL_COUNT_ALL)) {
-                if (rs.next()) {
-                    count = rs.getLong(1);
-                }
+            rs = stmt.executeQuery(SQL_COUNT_ALL);
+            if (rs.next()) {
+                count = rs.getLong(1);
             }
-        } catch (SQLException e) {
-            LOGGER.error("count", e);
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
         }
         return count;
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public boolean deleteById(Integer id) throws SQLException {
         Connection conn;
         PreparedStatement pstmt;
-        int count = -1;
+        int rowsAffected = -1;
         try {
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(SQL_DELETE);
             pstmt.setInt(1, id);
-            count = pstmt.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error(e);
+            rowsAffected = pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
         }
-        return count > 0;
+        return rowsAffected > 0;
     }
 
     @Override
@@ -209,39 +208,52 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> findAllByCategoryId(Integer categoryId) throws SQLException {
         List<Product> products = null;
         Connection conn = null;
-        PreparedStatement pstmt;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
         try {
             conn = DBConnection.getConnection();
-            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(SQL_SELECT_ALL_BY_CATEGORY_ID);
             pstmt.setInt(1, categoryId);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             products = new ArrayList<>();
             while (rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getInt("id"));
-                product.setCategoryId(rs.getInt("category_id"));
-                product.setSupplierId(rs.getInt("supplier_id"));
-                product.setBrandId(rs.getInt("brand_id"));
-                product.setName(rs.getString("name"));
-                product.setUnitPrice(rs.getDouble("price"));
-                product.setThumbnailUrl(rs.getString("thumbnail_url"));
-                product.setDescription(rs.getString("description"));
-                product.setQuantity(rs.getInt("quantity"));
-                product.setStatus(rs.getString("status"));
-                product.setDiscount(rs.getInt("discount"));
-                product.setViewCount(rs.getInt("view_count"));
-                product.setModifiedDate(rs.getTimestamp("updated_at"));
+                Product product = this.mapRersultSetToObject(rs);
                 products.add(product);
             }
-            conn.commit();
             pstmt.close();
         } catch (SQLException e) {
-            LOGGER.error(e);
-            conn.rollback();
+            throw e;
         } finally {
-            if (conn != null) conn.setAutoCommit(true);
+            if (rs != null) pstmt.close();
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
         }
         return products;
+    }
+
+    @Override
+    public Product mapRersultSetToObject(ResultSet rs) throws SQLException {
+        Product product = new Product();
+        try {
+            product.setId(rs.getInt("id"));
+            product.setCreatedBy(rs.getInt("created_by"));
+            product.setModifiedBy(rs.getInt("modified_by"));
+            product.setCreatedDate(rs.getTimestamp("created_date"));
+            product.setModifiedDate(rs.getTimestamp("modified_date"));
+            product.setCategory(categoryDAO.findById(rs.getInt("category_id")).orElse(null));
+            product.setSupplier(supplierDao.findById(rs.getInt("supplier_id")).orElse(null));
+//            product.setBrand(brand);
+            product.setName(rs.getString("name"));
+            product.setQuantity(rs.getInt("quantity"));
+            product.setUnitPrice(rs.getDouble("unit_price"));
+            product.setUnitPrice(rs.getDouble("thumbnail_url"));
+            product.setUnitPrice(rs.getDouble("description"));
+            product.setUnitPrice(rs.getDouble("quantity"));
+            product.setUnitPrice(rs.getDouble("status"));
+            product.setUnitPrice(rs.getDouble("discount"));
+        } catch (SQLException ex) {
+            throw ex;
+        }
+        return product;
     }
 }
