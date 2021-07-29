@@ -17,8 +17,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Supplier extends BaseEntity {
-    String name;
+    String companyName;
     String thumbnailUrl;
+    String vat;
+    String street;
     String city;
+    String postalCode;
+    String country;
     String contactNumber;
 }
